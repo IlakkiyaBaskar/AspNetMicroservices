@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  companydb:
+    container_name: companydb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      
+  company.api:
+    container_name: company.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettigns:ConnectionString=mongodb://companydb:27017"
+    depends_on:
+      - companydb
+    ports:
+      - "8000:80"
+      - "8001:443"
+
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
